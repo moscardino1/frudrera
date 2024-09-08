@@ -4,40 +4,9 @@ import io
 import base64
 import easyocr
 import numpy as np
-import os 
 
-import time
-from urllib.error import HTTPError
-import gc
-gc.collect()
-def load_model_with_retry(max_retries=3, delay=5):
-    model_path = os.path.join(os.path.dirname(__file__), 'yolov5m.pt')
-    
-    for attempt in range(max_retries):
-        try:
-            if os.path.exists(model_path):
-                # Load from local file if it exists
-                model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path, force_reload=False)
-            else:
-                # Download and save the model if it doesn't exist locally
-                model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True, trust_repo=True)
-                torch.save(model.state_dict(), model_path)
-            return model
-        except HTTPError as e:
-            if e.code == 403 and attempt < max_retries - 1:
-                print(f"Rate limit exceeded. Retrying in {delay} seconds...")
-                time.sleep(delay)
-                delay *= 2  # Exponential backoff
-            else:
-                raise
-
-# Use the function to load the model
-try:
-    model = load_model_with_retry()
-    print("Model loaded successfully!")
-except Exception as e:
-    print(f"Failed to load model: {str(e)}")
-
+# Load YOLOv5 model
+model = torch.hub.load('ultralytics/yolov5', 'yolov5m', pretrained=True,force_reload=True)
 
 # Initialize OCR for detecting brand logos or text
 ocr_reader = easyocr.Reader(['en'])  # Add more languages if needed
