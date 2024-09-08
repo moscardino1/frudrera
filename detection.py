@@ -4,12 +4,15 @@ import io
 import base64
 import easyocr
 import numpy as np
+torch.cuda.empty_cache()
 
 # Load YOLOv5 model
-model = torch.hub.load('./yolov5', 'yolov5m', source='local')
+model = torch.hub.load('./yolov5', 'yolov5s', source='local')
 # Initialize OCR for detecting brand logos or text
 ocr_reader = easyocr.Reader(['en'])  # Add more languages if needed
-
+device = torch.device('cpu')
+model.to(device)
+# Process images with a smaller batch size
 def detect_objects(file):
     # Read and process the image
     img_bytes = file.read()
