@@ -1,0 +1,134 @@
+/* styles.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; 
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1em 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+h1 {
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 80px 20px; /* Space for fixed header */
+}
+
+.section {
+    flex: 1 1 300px; /* Adjust for desired column width */
+    margin: 10px;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #333;
+}
+
+#originalImage {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.category {
+    margin-bottom: 20px;
+}
+
+.category ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.category li {
+    display: flex;
+    align-items: center; 
+    margin-bottom: 10px;
+}
+
+.category li img {
+    max-width: 50px;
+    height: auto;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.recipe {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background: white; 
+    position: relative;
+}
+
+.recipe img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px; 
+    margin-bottom: 15px;
+}
+
+.collapsible {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.active, .collapsible:hover {
+    background-color: #ddd;
+}
+
+.content {
+    padding: 0 18px;
+    display: none; 
+    overflow: hidden;
+    background-color: white;
+}
+
+.missing { 
+    color: red;
+    font-weight: bold;
+}
+
+#showAllRecipes {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#showAllRecipes:hover {
+    background-color: #0056b3;
+}
