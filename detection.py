@@ -8,7 +8,8 @@ import os
 
 import time
 from urllib.error import HTTPError
-
+import gc
+gc.collect()
 def load_model_with_retry(max_retries=3, delay=5):
     model_path = os.path.join(os.path.dirname(__file__), 'yolov5m.pt')
     
@@ -19,7 +20,7 @@ def load_model_with_retry(max_retries=3, delay=5):
                 model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path, force_reload=False)
             else:
                 # Download and save the model if it doesn't exist locally
-                model = torch.hub.load('ultralytics/yolov5', 'yolov5m', pretrained=True, trust_repo=True)
+                model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True, trust_repo=True)
                 torch.save(model.state_dict(), model_path)
             return model
         except HTTPError as e:
