@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRUDRERA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/home.jpeg') }}" type="image/x-icon"> <!-- Add this line -->
+
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='images/home.jpeg') }}" alt="FRUDRERA Logo" style="width: 100%; max-height: 500px; height: auto; margin: 0; display: block;">
+        <!-- <h1 style="text-align: center; margin: 10px 0; color: white;">FRUDRERA - AI Recipe Recommender</h1> -->
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <p>Upload a photo of your fridge, and we'll suggest a recipe based on the ingredients we detect!</p>
+            <form id="uploadForm" enctype="multipart/form-data" style="margin-top: 20px;">
+                <input type="file" name="file" accept="image/*" required style="margin-bottom: 10px;">
+                <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Detect Objects</button>
+            </form>
+            <div id="results" style="margin-top: 20px;"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+
+            fetch('/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('results').innerHTML = `<p>Error: ${data.error}</p>`;
+                } else {
+                    localStorage.setItem('detectionResults', JSON.stringify(data));
+                    window.location.href = '/results';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FRUDRERA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/home.jpeg') }}" type="image/x-icon"> <!-- Add this line -->
+
+</head>
+<body>
+    <header>
+        <h1>FRUDRERA - See Food, Make Food</h1>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>Original Image</h2>
+            <img id="originalImage" alt="Original Image">
+        </div>
+        <div class="section">
+            <h2>Detected Ingredients</h2>
+            <div id="detectedObjects"></div>
+        </div>
+        <div class="section">
+            <h2>Recommended Recipes</h2>
+            <div id="recommendedRecipes"></div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const results = JSON.parse(localStorage.getItem('detectionResults'));
+            if (results) {
+                // Display original image
+                document.getElementById('originalImage').src = `data:image/png;base64,${results.original_image}`;
+
+                // Display detected objects
+                const detectedObjectsDiv = document.getElementById('detectedObjects');
+                for (const [category, objects] of Object.entries(results.categorized_objects)) {
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'category';
+
+                    const categoryHeader = document.createElement('h3');
+                    categoryHeader.textContent = category;
+                    categoryDiv.appendChild(categoryHeader);
+
+                    const objectsList = document.createElement('ul');
+                    objects.forEach(obj => {
+                        const objectItem = document.createElement('li');
+                        objectItem.innerHTML = `
+                            <img src="data:image/png;base64,${obj.cropped_image}" alt="${obj.label}">
+                            <span>${obj.label} (Confidence: ${obj.confidence.toFixed(2)})</span>
+                        `;
+                        objectsList.appendChild(objectItem);
+                    });
+                    categoryDiv.appendChild(objectsList);
+
+                    detectedObjectsDiv.appendChild(categoryDiv);
+                }
+
+                // Display recommended recipes
+                const recommendedRecipesDiv = document.getElementById('recommendedRecipes');
+                if (results.recommended_recipes.length > 0) {
+                    results.recommended_recipes.forEach((recipe, index) => {
+                        const recipeDiv = document.createElement('div');
+                        recipeDiv.className = 'recipe card'; // Added 'card' class here
+                        recipeDiv.innerHTML = `
+                            <img src="${recipe.image}" alt="${recipe.recipe}">
+                            <h3>${recipe.recipe}</h3>
+                            <button class="collapsible">Show Details</button>
+                            <div class="content">
+                                <p><strong>Description:</strong> ${recipe.description}</p>
+                                <p><strong>Ingredients:</strong></p>
+                                <ul>
+                                    ${recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
+                                </ul>
+                                <p><strong>Missing Ingredients:</strong></p>
+                                <ul>
+                                    ${recipe.missing_ingredients.length > 0 
+                                        ? recipe.missing_ingredients.map(missing => `<li class="missing">${missing}</li>`).join('') 
+                                        : '<li>None</li>'}
+                                </ul>
+                                <p><strong>Steps:</strong></p>
+                                <ol>
+                                    ${recipe.steps.map(step => `<li>${step}</li>`).join('')}
+                                </ol>
+                                <p><strong>Cooking Time:</strong> ${recipe.cooking_time}</p>
+                                <p><strong>Servings:</strong> ${recipe.servings}</p>
+                                <p><strong>Category:</strong> ${recipe.category}</p>
+                            </div>
+                        `;
+                        recommendedRecipesDiv.appendChild(recipeDiv);
+
+                        // Collapsible content functionality
+                        const coll = recipeDiv.querySelector(".collapsible");
+                        const content = recipeDiv.querySelector(".content");
+                        coll.addEventListener("click", function() {
+                            this.classList.toggle("active");
+                            if (content.style.display === "block") {
+                                content.style.display = "none";
+                            } else {
+                                content.style.display = "block";
+                            }
+                        });
+                    });
+                } else {
+                    recommendedRecipesDiv.innerHTML = '<p>No recipes found for the detected ingredients.</p>';
+                }
+            } else {
+                document.body.innerHTML = '<p>No results found. Please go back and upload an image.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
