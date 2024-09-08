@@ -19,3 +19,4 @@ costs rent exp should be monthly and autopopulated
 python frudrera/app.py
 pip freeze > requirements.txt
 pip install -r /path/to/requirements.txt
+gunicorn app:app
