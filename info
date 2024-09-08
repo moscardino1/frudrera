@@ -15,3 +15,7 @@ add some results interacting with input
 layout it's easier to navigate and understand
 costs rent exp should be monthly and autopopulated
  info
+
+python frudrera/app.py
+pip freeze > requirements.txt
+pip install -r /path/to/requirements.txt

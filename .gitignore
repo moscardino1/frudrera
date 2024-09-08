@@ -1,4 +1,5 @@
 venv
 # .vercel
 # node_modules
-/frudrera/yolov5m.pt
+yolov5m.pt
+frudrera/__pycache__
