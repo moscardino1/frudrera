@@ -6,7 +6,7 @@ import easyocr
 import numpy as np
 
 # Load YOLOv5 model
-model = torch.hub.load('yolov5', 'yolov5m', source='local')
+model = torch.hub.load('./yolov5', 'yolov5m', source='local')
 # Initialize OCR for detecting brand logos or text
 ocr_reader = easyocr.Reader(['en'])  # Add more languages if needed
 
