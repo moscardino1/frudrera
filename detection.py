@@ -4,9 +4,14 @@ import io
 import base64
 import easyocr
 import numpy as np
-
+import os 
 # Load YOLOv5 model
-model = torch.hub.load('ultralytics/yolov5', 'yolov5m', pretrained=True)
+# model = torch.hub.load('ultralytics/yolov5', 'yolov5m', pretrained=True, trust_repo=True)
+
+# Load the model from a local file
+model_path = os.path.join(os.path.dirname(__file__), 'yolov5m.pt')
+model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path, force_reload=True)
+
 
 # Initialize OCR for detecting brand logos or text
 ocr_reader = easyocr.Reader(['en'])  # Add more languages if needed
