@@ -5,29 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FRUDRERA</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='images/home.jpeg') }}" type="image/x-icon"> <!-- Add this line -->
-
+    <link rel="icon" href="{{ url_for('static', filename='images/home.jpeg') }}" type="image/x-icon">
 </head>
 <body>
     <header>
-        <img src="{{ url_for('static', filename='images/home.jpeg') }}" alt="FRUDRERA Logo" style="width: 100%; max-height: 500px; height: auto; margin: 0; display: block;">
-        <!-- <h1 style="text-align: center; margin: 10px 0; color: white;">FRUDRERA - AI Recipe Recommender</h1> -->
+        <h1>FRUDRERA - See Food, Make Food</h1>
     </header>
 
     <div class="container">
-        <div class="section">
+        <div class="input-section">
+            <h2>Upload Your Fridge Photo</h2>
             <p>Upload a photo of your fridge, and we'll suggest a recipe based on the ingredients we detect!</p>
-            <form id="uploadForm" enctype="multipart/form-data" style="margin-top: 20px;">
-                <input type="file" name="file" accept="image/*" required style="margin-bottom: 10px;">
-                <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Detect Objects</button>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" name="file" accept="image/*" required>
+                <button type="submit">Detect Objects</button>
             </form>
-            <div id="results" style="margin-top: 20px;"></div>
+            <div class="loading" id="loadingIndicator">Loading...</div>
         </div>
     </div>
 
     <script>
         document.getElementById('uploadForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            document.getElementById('loadingIndicator').classList.add('show');
             var formData = new FormData(this);
 
             fetch('/', {
@@ -36,6 +36,7 @@
             })
             .then(response => response.json())
             .then(data => {
+                document.getElementById('loadingIndicator').classList.remove('show');
                 if (data.error) {
                     document.getElementById('results').innerHTML = `<p>Error: ${data.error}</p>`;
                 } else {
@@ -44,6 +45,7 @@
                 }
             })
             .catch(error => {
+                document.getElementById('loadingIndicator').classList.remove('show');
                 console.error('Error:', error);
             });
         });

@@ -4,40 +4,31 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4; 
+    background-color: #f9f9f9; /* Softer background color */
     color: #333;
 }
 
 header {
-    background-color: #333;
+    background-color: #257b37; /* Green header for freshness */
     color: white;
     text-align: center;
-    padding: 1em 0;
+    padding: 20px 0; /* Increased padding for better spacing */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
 }
-header img {
-    width: 100%; /* Make the logo responsive */
-    max-height: 300px; /* Limit the height to maintain aspect ratio */
-    object-fit: cover; /* Ensure the image covers the area without distortion */
-}
-header {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 20px 0; /* Increased padding for better spacing */
-    position: relative; /* Changed to relative for better layout control */
-}
 
 h1 {
     margin: 0;
+    font-size: 2.5em; /* Larger font size for the title */
 }
 
 .container {
     display: flex;
+    /* flex-direction: column;
+    align-items: center; */
     flex-wrap: wrap;
     justify-content: space-around;
     padding: 100px 20px; /* Increased padding to account for fixed header height */
@@ -47,7 +38,7 @@ h1 {
     flex: 1 1 300px; /* Adjust for desired column width */
     margin: 10px;
     background: white;
-    border-radius: 8px;
+    border-radius: 12px; /* Rounded corners */
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -134,8 +125,6 @@ h2 {
     display: block;
     margin: 20px auto;
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;

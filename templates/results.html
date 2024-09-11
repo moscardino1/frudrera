@@ -3,8 +3,7 @@
 <head>
     <title>FRUDRERA</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='images/home.jpeg') }}" type="image/x-icon"> <!-- Add this line -->
-
+    <link rel="icon" href="{{ url_for('static', filename='images/home.jpeg') }}" type="image/x-icon">
 </head>
 <body>
     <header>
@@ -61,7 +60,7 @@
                 if (results.recommended_recipes.length > 0) {
                     results.recommended_recipes.forEach((recipe, index) => {
                         const recipeDiv = document.createElement('div');
-                        recipeDiv.className = 'recipe card'; // Added 'card' class here
+                        recipeDiv.className = 'recipe card';
                         recipeDiv.innerHTML = `
                             <img src="${recipe.image}" alt="${recipe.recipe}">
                             <h3>${recipe.recipe}</h3>

@@ -7,7 +7,7 @@ import numpy as np
 torch.cuda.empty_cache()
 
 # Load YOLOv5 model
-model = torch.hub.load('./yolov5', 'yolov5s', source='local')
+model = torch.hub.load('./yolov5', 'yolov5m', source='local')
 # Initialize OCR for detecting brand logos or text
 ocr_reader = easyocr.Reader(['en'])  # Add more languages if needed
 device = torch.device('cpu')
