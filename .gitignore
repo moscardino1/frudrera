@@ -1,3 +1,4 @@
 .vercel
 venv
 __pycache__
+config.json

@@ -4,19 +4,39 @@ from PIL import Image
 import io
 import base64
 import numpy as np
-import easyocr
-import os
 
-
+# Load configuration
 with open('config.json') as f:
     config = json.load(f)
 
 YOLO_API_URL = config['YOLO_API_URL']
 YOLO_API_KEY = config['YOLO_API_KEY']
-headers = {"x-api-key": YOLO_API_KEY}
-ocr_reader = easyocr.Reader(['en'])  # Add more languages if needed
+OCR_API_KEY = config['OCR_API_KEY']  # Add your OCR.space API key to config
+OCR_API_URL = 'https://api.ocr.space/parse/image'
 
-# Function to detect objects using Ultralytics API and OCR using OCR.space
+headers = {"x-api-key": YOLO_API_KEY}
+
+# Function to perform OCR using OCR.space API
+def perform_ocr(image_bytes):
+    ocr_headers = {
+        'apikey': OCR_API_KEY
+    }
+    ocr_data = {
+        'isOverlayRequired': 'false',
+        'language': 'eng'
+    }
+    response = requests.post(OCR_API_URL, headers=ocr_headers, data=ocr_data, files={'file': image_bytes})
+    
+    if response.status_code != 200:
+        return []  # Handle error or return empty list
+
+    ocr_results = response.json()
+    text_detected = []
+    for result in ocr_results.get('ParsedResults', []):
+        text_detected.append(result['ParsedText'])
+    return text_detected
+
+# Function to detect objects using Ultralytics API
 def detect_objects(file):
     # Read the image bytes
     img_bytes = file.read()
@@ -41,7 +61,7 @@ def detect_objects(file):
 
     # Sending request to the Ultralytics API
     response = requests.post(YOLO_API_URL, headers=headers, data=data, files={"file": img_io})
-    # Check if the API call was successful
+
     # Check if the API call was successful
     if response.status_code != 200:
         return {"error": "Detection failed"}
@@ -56,8 +76,8 @@ def detect_objects(file):
     for image in api_results['images']:
         for obj in image['results']:
             box = obj['box']  # This contains the coordinates {'x1', 'x2', 'y1', 'y2'}
-            label = obj['name']  # This contains the detected object's name
-            confidence = obj['confidence']  # This contains the confidence score
+            label = obj['name']   
+            confidence = obj['confidence']   
 
             # Set a confidence threshold for detection
             if confidence > 0.0001:
@@ -70,14 +90,12 @@ def detect_objects(file):
                 cropped_obj.save(buffered, format="PNG")
                 img_str = base64.b64encode(buffered.getvalue()).decode()
 
-                # Optionally, perform OCR on the cropped object (if needed)
-                cropped_np = np.array(cropped_obj)
-                ocr_result = ocr_reader.readtext(cropped_np)
+                # Perform OCR on the cropped object using OCR.space
+                buffered.seek(0)  # Reset buffer position
+                ocr_result = perform_ocr(buffered)
 
                 # Extract the most probable text from OCR result
-                detected_text = ''
-                if ocr_result:
-                    detected_text = ocr_result[0][1]  # Get the first OCR result (most confident)
+                detected_text = ' '.join(ocr_result)  # Combine all detected texts
 
                 # Determine the specific product if OCR detects a known brand or logo
                 product_label = detected_text.lower() + ' ' + label
