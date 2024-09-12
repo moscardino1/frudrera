@@ -1,135 +1,187 @@
 /* styles.css */
-
-body {
-    font-family: 'Arial', sans-serif;
+:root {
+    --primary-color: #257b37;
+    --secondary-color: #f9f9f9;
+    --text-color: #333;
+    --card-bg-color: white;
+    --header-height: 60px;
+  }
+  
+  * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9; /* Softer background color */
-    color: #333;
-}
-
-header {
-    background-color: #257b37; /* Green header for freshness */
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    line-height: 1.6;
+  }
+  
+  header {
+    background-color: var(--primary-color);
     color: white;
     text-align: center;
-    padding: 20px 0; /* Increased padding for better spacing */
+    padding: 15px 0;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
-}
-
-h1 {
+    height: var(--header-height);
+  }
+  
+  h1 {
     margin: 0;
-    font-size: 2.5em; /* Larger font size for the title */
-}
-
-.container {
-    display: flex;
-    /* flex-direction: column;
-    align-items: center; */
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 100px 20px; /* Increased padding to account for fixed header height */
-}
-
-.section {
-    flex: 1 1 300px; /* Adjust for desired column width */
-    margin: 10px;
-    background: white;
-    border-radius: 12px; /* Rounded corners */
+    font-size: 1.5em;
+  }
+  
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: calc(var(--header-height) + 20px) 20px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .section {
+    background: var(--card-bg-color);
+    border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-    color: #333;
-}
-
-#originalImage {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+  }
+  
+  #originalImage {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
-}
-
-.category {
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .category {
     margin-bottom: 20px;
-}
-
-.category ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.category li {
-    display: flex;
-    align-items: center; 
+  }
+  
+  .category h3 {
+    color: var(--primary-color);
     margin-bottom: 10px;
-}
-
-.category li img {
-    max-width: 50px;
+  }
+  
+  .object-details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+  }
+  
+  .object-details img {
+    max-width: 100px;
     height: auto;
-    margin-right: 10px;
+    margin-right: 15px;
     border-radius: 5px;
-}
-
-.recipe {
+  }
+  
+  .object-info {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .recipe {
     border: 1px solid #ddd;
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
-    background: white; 
-    position: relative;
-}
-
-.recipe img {
+    background: var(--card-bg-color);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .recipe:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .recipe img {
     max-width: 100%;
     height: auto;
-    border-radius: 8px; 
+    border-radius: 8px;
     margin-bottom: 15px;
-}
-
-.collapsible {
+  }
+  
+  .collapsible {
     background-color: #eee;
-    color: #444;
+    color: var(--text-color);
     cursor: pointer;
-    padding: 10px;
+    padding: 12px;
     width: 100%;
     border: none;
     text-align: left;
     outline: none;
-    font-size: 15px;
+    font-size: 16px;
     border-radius: 5px;
     transition: background-color 0.3s;
-}
-
-.active, .collapsible:hover {
+  }
+  
+  .active, .collapsible:hover {
     background-color: #ddd;
-}
-
-.content {
-    padding: 0 18px;
-    display: none; 
+  }
+  
+  .content {
+    padding: 15px;
+    display: none;
     overflow: hidden;
-    background-color: white;
-}
-
-.missing { 
-    color: red;
+    background-color: var(--card-bg-color);
+    border-radius: 0 0 8px 8px;
+  }
+  
+  .missing {
+    color: #d9534f;
     font-weight: bold;
-}
-
-#showAllRecipes {
+  }
+  
+  #showAllRecipes {
     display: block;
     margin: 20px auto;
-    padding: 10px 20px;
+    padding: 12px 24px;
+    background-color: var(--primary-color);
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-#showAllRecipes:hover {
-    background-color: #0056b3;
-}
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  #showAllRecipes:hover {
+    background-color: #1c5c29;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      grid-template-columns: 1fr;
+    }
+  
+    h1 {
+      font-size: 1.2em;
+    }
+  
+    .object-details {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .object-details img {
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+  }

@@ -3,7 +3,7 @@ import io
 import base64
 from dotenv import load_dotenv
 import os
-load_dotenv()  # Load environment variables from .env file
+load_dotenv()
 from config import Config
 from detection import detect_objects
 from recipe import recommend_recipe
@@ -24,10 +24,16 @@ def index():
         if file:
             detection_results = detect_objects(file)
             ingredients = list(detection_results['categorized_objects'].keys())
-            print(ingredients)
-            recipes = recommend_recipe(ingredients)
+            
+            # Extract detailed ingredients including brand information
+            detailed_ingredients = []
+            for category, items in detection_results['categorized_objects'].items():
+                for item in items:
+                    detailed_ingredients.append(item['label'])
+            
+            recipes = recommend_recipe(detailed_ingredients)
             detection_results['recommended_recipes'] = recipes
-            return jsonify(detection_results)  # Return the final response as JSON
+            return jsonify(detection_results)
 
     return render_template('index.html')
 

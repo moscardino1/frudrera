@@ -4,6 +4,21 @@
     <title>FRUDRERA</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='images/home.jpeg') }}" type="image/x-icon">
+    <style>
+        /* .object-details {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        } */
+        /* .object-details img {
+            max-width: 200px;
+            height: auto;
+        } */
+        /* .object-info {
+            margin-left: 20px;
+        } */
+    </style>
 </head>
 <body>
     <header>
@@ -41,22 +56,27 @@
                     categoryHeader.textContent = category;
                     categoryDiv.appendChild(categoryHeader);
 
-                    const objectsList = document.createElement('ul');
                     objects.forEach(obj => {
-                        const objectItem = document.createElement('li');
-                        objectItem.innerHTML = `
+                        const objectDiv = document.createElement('div');
+                        objectDiv.className = 'object-details';
+                        objectDiv.innerHTML = `
                             <img src="data:image/png;base64,${obj.cropped_image}" alt="${obj.label}">
-                            <span>${obj.label} (Confidence: ${obj.confidence.toFixed(2)})</span>
+                            <div class="object-info">
+                                <p><strong>Label:</strong> ${obj.label}</p>
+                                <p><strong>Confidence:</strong> ${obj.confidence.toFixed(2)}</p>
+                                <p><strong>Detected Text:</strong> ${obj.detected_text || 'None'}</p>
+                                <p><strong>OCR Text:</strong> ${obj.ocr_text || 'None'}</p>
+                            </div>
                         `;
-                        objectsList.appendChild(objectItem);
+                        categoryDiv.appendChild(objectDiv);
                     });
-                    categoryDiv.appendChild(objectsList);
 
                     detectedObjectsDiv.appendChild(categoryDiv);
                 }
 
-                // Display recommended recipes
-                const recommendedRecipesDiv = document.getElementById('recommendedRecipes');
+                // Display recommended recipes (keep this part as it was)
+ // Display recommended recipes
+ const recommendedRecipesDiv = document.getElementById('recommendedRecipes');
                 if (results.recommended_recipes.length > 0) {
                     results.recommended_recipes.forEach((recipe, index) => {
                         const recipeDiv = document.createElement('div');
