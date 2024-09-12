@@ -94,7 +94,10 @@ recipes = {
     'pasta_ragu': {
         'recipe': 'Pasta al Ragu',
         'description': 'A hearty pasta dish with a rich meat sauce.',
-        'ingredients': ['400g pasta (tagliatelle or pappardelle)', '300g ground beef', '1 onion', '2 cloves garlic', '1 carrot', '1 celery stalk', '400g canned tomatoes', '1/2 cup red wine', 'Olive oil', 'Salt', 'Pepper', 'Parmesan cheese'],
+        'ingredients': ['400g pasta (tagliatelle or pappardelle)',
+                         '300g ground beef', '1 onion', '2 cloves garlic',
+                           '1 carrot', '1 celery stalk', '400g canned tomatoes', '1/2 cup red wine', 'Olive oil', 
+                           'Salt', 'Pepper', 'Parmesan cheese','ragu bottle'],
         'steps': [
             'Chop the onion, garlic, carrot, and celery finely.',
             'In a large pan, heat olive oil and sauté the chopped vegetables until soft.',

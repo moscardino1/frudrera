@@ -11,7 +11,7 @@ def extract_all_ingredients():
 def recommend_recipe(available_ingredients):
     recommendations = []
     ingredient_set = set(available_ingredients)  # Convert to set for faster lookup
-
+    print(ingredient_set)
     for recipe_key, recipe_info in recipes.items():
         # Check if any ingredient matches
         if any(fuzz.ratio(ingredient.lower(), recipe_ingredient.lower()) > 80 for ingredient in ingredient_set for recipe_ingredient in recipe_info['ingredients']):

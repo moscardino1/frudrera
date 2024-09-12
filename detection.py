@@ -3,40 +3,30 @@ import requests
 from PIL import Image
 import io
 import base64
-import numpy as np
+import os
+YOLO_API_URL = os.getenv('YOLO_API_URL')
+YOLO_API_KEY = os.getenv('YOLO_API_KEY')
+OCR_API_KEY = os.getenv('OCR_API_KEY')
+BLIP_API_URL = os.getenv('BLIP_API_URL')
+BLIP_API_KEY = os.getenv('BLIP_API_KEY')
+headers = {"x-api-key": YOLO_API_KEY, "Authorization": f"Bearer {BLIP_API_KEY}"}
 
-# Load configuration
-with open('config.json') as f:
-    config = json.load(f)
-
-YOLO_API_URL = config['YOLO_API_URL']
-YOLO_API_KEY = config['YOLO_API_KEY']
-OCR_API_KEY = config['OCR_API_KEY']  # Add your OCR.space API key to config
-OCR_API_URL = 'https://api.ocr.space/parse/image'
-
-headers = {"x-api-key": YOLO_API_KEY}
-
-# Function to perform OCR using OCR.space API
-def perform_ocr(image_bytes):
-    ocr_headers = {
-        'apikey': OCR_API_KEY
-    }
-    ocr_data = {
-        'isOverlayRequired': 'false',
-        'language': 'eng'
-    }
-    response = requests.post(OCR_API_URL, headers=ocr_headers, data=ocr_data, files={'file': image_bytes})
+# Function to query BLIP API for image captioning
+def get_image_caption(image_bytes):
+    response = requests.post(BLIP_API_URL, headers={"Authorization": f"Bearer {BLIP_API_KEY}"}, data=image_bytes)
     
-    if response.status_code != 200:
-        return []  # Handle error or return empty list
-
-    ocr_results = response.json()
-    text_detected = []
-    for result in ocr_results.get('ParsedResults', []):
-        text_detected.append(result['ParsedText'])
-    return text_detected
-
-# Function to detect objects using Ultralytics API
+    if response.status_code == 200:
+        # print("BLIP API Response:", response.json())  # Print response for debugging
+        
+        response_json = response.json()
+        if isinstance(response_json, list) and len(response_json) > 0:
+            return response_json[0].get('generated_text', '')  # Adjust based on actual response structure
+        elif isinstance(response_json, dict):
+            return response_json.get('generated_text', '')
+        else:
+            return 'Unexpected response format'
+    else:
+        return 'API request failed'
 def detect_objects(file):
     # Read the image bytes
     img_bytes = file.read()
@@ -60,10 +50,9 @@ def detect_objects(file):
     }
 
     # Sending request to the Ultralytics API
-    response = requests.post(YOLO_API_URL, headers=headers, data=data, files={"file": img_io})
-
-    # Check if the API call was successful
+    response = requests.post(YOLO_API_URL, headers={"x-api-key": YOLO_API_KEY}, data=data, files={"file": img_io})
     if response.status_code != 200:
+        print("Ultralytics API Error:", response.text)  # Log full error message
         return {"error": "Detection failed"}
 
     # Parse the API response
@@ -73,16 +62,16 @@ def detect_objects(file):
     objects_list = []
 
     # Process the results from the API
-    for image in api_results['images']:
-        for obj in image['results']:
-            box = obj['box']  # This contains the coordinates {'x1', 'x2', 'y1', 'y2'}
-            label = obj['name']   
-            confidence = obj['confidence']   
+    for image in api_results.get('images', []):
+        for obj in image.get('results', []):
+            box = obj.get('box', {})  # This contains the coordinates {'x1', 'x2', 'y1', 'y2'}
+            label = obj.get('name', '')  # This contains the detected object's name
+            confidence = obj.get('confidence', 0)  # This contains the confidence score
 
             # Set a confidence threshold for detection
             if confidence > 0.0001:
                 # Crop the detected object from the image using the bounding box
-                x1, y1, x2, y2 = box['x1'], box['y1'], box['x2'], box['y2']
+                x1, y1, x2, y2 = box.get('x1', 0), box.get('y1', 0), box.get('x2', 0), box.get('y2', 0)
                 cropped_obj = img.crop((x1, y1, x2, y2))
 
                 # Convert the cropped object to base64 for display
@@ -90,15 +79,14 @@ def detect_objects(file):
                 cropped_obj.save(buffered, format="PNG")
                 img_str = base64.b64encode(buffered.getvalue()).decode()
 
-                # Perform OCR on the cropped object using OCR.space
-                buffered.seek(0)  # Reset buffer position
-                ocr_result = perform_ocr(buffered)
-
-                # Extract the most probable text from OCR result
-                detected_text = ' '.join(ocr_result)  # Combine all detected texts
+                # Get the caption using BLIP API
+                cropped_img_io = io.BytesIO()
+                cropped_obj.save(cropped_img_io, format='JPEG')
+                cropped_img_bytes = cropped_img_io.getvalue()
+                detected_text = get_image_caption(cropped_img_bytes)
 
                 # Determine the specific product if OCR detects a known brand or logo
-                product_label = detected_text.lower() + ' ' + label
+                product_label =   label
 
                 # Append the detected object to the objects list
                 objects_list.append({
