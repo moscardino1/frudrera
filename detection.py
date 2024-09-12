@@ -80,13 +80,24 @@ def perform_ocr(image_bytes):
 
 def detect_objects(file):
     img_bytes = file.read()
+    
+    # Open the image and resize it if necessary
     img = Image.open(io.BytesIO(img_bytes))
+    
+    # Resize the image if it is larger than a specified threshold (e.g., 1024x1024 pixels)
+    max_size = (1024, 1024)
+    if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
+        img.thumbnail(max_size, Image.Resampling.LANCZOS)  # Use LANCZOS instead of ANTIALIAS
+    
+    # Convert to RGB if necessary
     if img.mode == 'RGBA':
         img = img.convert('RGB')
 
+    # Save the resized image to a BytesIO object
     img_io = io.BytesIO()
     img.save(img_io, format='JPEG')
     img_io.seek(0)
+
 
     try:
         data = {
@@ -101,9 +112,12 @@ def detect_objects(file):
         return {"error": "Object detection failed"}
 
     objects_list = []
+    detection_count = 0
 
     for image in api_results.get('images', []):
         for obj in image.get('results', []):
+            if detection_count >= 10:
+                break
             box = obj.get('box', {})
             label = obj.get('name', '')
             confidence = obj.get('confidence', 0)
@@ -134,6 +148,9 @@ def detect_objects(file):
                     'detected_text': detected_text,
                     'ocr_text': ocr_text
                 })
+                print(product_label)
+                detection_count += 1
+
 
     buffered = io.BytesIO()
     img.save(buffered, format="PNG")
