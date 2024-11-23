@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold text-center mb-4">How FRUDRERA Works</h1>
+        <div class="mb-4">
+            <h2 class="text-xl font-semibold">Overview</h2>
+            <p>FRUDRERA is an AI-powered recipe recommender that suggests recipes based on the ingredients detected in a photo of your fridge. It utilizes object detection and OCR to identify ingredients and recommend recipes accordingly.</p>
+        </div>
+        <div class="mb-4">
+            <h2 class="text-xl font-semibold">Features</h2>
+            <ul class="list-disc pl-5">
+                <li>Upload an image of your fridge to detect ingredients.</li>
+                <li>Get recipe recommendations based on detected ingredients.</li>
+                <li>View detailed recipe information including ingredients, steps, and cooking time.</li>
+            </ul>
+        </div>
+        <div class="mb-4">
+            <h2 class="text-xl font-semibold">Technologies Used</h2>
+            <ul class="list-disc pl-5">
+                <li><strong>Flask:</strong> Web framework for building the application.</li>
+                <li><strong>YOLOv5:</strong> Object detection model for identifying ingredients.</li>
+                <li><strong>EasyOCR:</strong> Optical Character Recognition for detecting text in images.</li>
+                <li><strong>FuzzyWuzzy:</strong> For matching ingredients with recipe names.</li>
+            </ul>
+        </div>
+        <div class="mb-4">
+            <h2 class="text-xl font-semibold">Legal Considerations</h2>
+            <p>All technology usage complies with respective terms of service. Ensure that you have the necessary permissions and adhere to the usage limits set by these technologies.</p>
+        </div>
+    </div>
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

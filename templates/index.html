@@ -5,55 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FRUDRERA</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='images/home.jpeg') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='images/home.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <h1>FRUDRERA - See Food, Make Food</h1>
+    <div class="noise"></div>
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">FRUDRERA</div>
+            <div class="tagline">See Food, Make Food</div>
+        </nav>
     </header>
 
-    <div class="container">
-        <div class="input-section">
-            <h2>Upload Your Fridge Photo</h2>
-            <p>Upload a photo of your fridge, and we'll suggest a recipe based on the ingredients we detect!</p>
-            <form id="uploadForm" enctype="multipart/form-data">
-                <input type="file" name="file" accept="image/*" required>
-                <button type="submit">Detect Objects</button>
-            </form>
-            <div class="loading" id="loadingIndicator">
-                <span>Loading...</span>
-                <div class="spinner"></div>
+    <main class="main-container">
+        <section class="hero">
+            <h1 class="hero-title">Transform Your Ingredients</h1>
+            <p class="hero-subtitle">Into Culinary Masterpieces</p>
+        </section>
+
+        <section class="upload-section">
+            <div class="upload-container">
+                <div class="upload-content">
+                    <h2 class="section-title">Upload Your Fridge Photo</h2>
+                    <p class="section-description">Discover amazing recipes from your available ingredients</p>
+                    
+                    <form id="uploadForm" class="upload-form" enctype="multipart/form-data">
+                        <div class="file-upload-wrapper">
+                            <input type="file" name="file" id="file" class="file-upload-input" accept="image/*" required>
+                            <label for="file" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Choose a file or drag it here</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="submit-button">
+                            <span class="button-text">Detect Ingredients</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
-                    </div>
-    </div>
+        </section>
 
+        <div class="loading-overlay" id="loadingIndicator">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <span class="loading-text">Processing your image...</span>
+            </div>
+        </div>
+    </main>
+
+
+    <footer class="footer">
+        <div class="footer-content">
+            <nav class="footer-links">
+                <a href="/contact" class="footer-link">Contact</a>
+                <a href="/info" class="footer-link">How It Works</a>
+                <a href="/donate" class="footer-link">Support Us</a>
+            </nav>
+            <p class="footer-copy">© 2024 FRUDRERA. All rights reserved.</p>
+        </div>
+    </footer>
     <script>
-      document.getElementById('uploadForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    document.getElementById('loadingIndicator').classList.add('show');
-    var formData = new FormData(this);
+        // File upload preview
+        document.querySelector('.file-upload-input').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            const label = document.querySelector('.file-upload-label span');
+            if (fileName) {
+                label.textContent = fileName;
+            }
+        });
 
-    fetch('/', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('loadingIndicator').classList.remove('show');
-        if (data.error) {
-            document.getElementById('results').innerHTML = `<p>Error: ${data.error}</p>`;
-        } else {
-            localStorage.setItem('detectionResults', JSON.stringify(data));
-            window.location.href = '/results';
+        // Form submission
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('loadingIndicator').classList.add('show');
+            
+            var formData = new FormData(this);
+            fetch('/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loadingIndicator').classList.remove('show');
+                if (data.error) {
+                    showNotification('Error: ' + data.error, 'error');
+                } else {
+                    localStorage.setItem('detectionResults', JSON.stringify(data));
+                    window.location.href = '/results';
+                }
+            })
+            .catch(error => {
+                document.getElementById('loadingIndicator').classList.remove('show');
+                showNotification('An error occurred. Please try again.', 'error');
+                console.error('Error:', error);
+            });
+        });
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
         }
-    })
-    .catch(error => {
-        document.getElementById('loadingIndicator').classList.remove('show');
-        document.getElementById('results').innerHTML = `<p>An error occurred: ${error.message}. Please try again.</p>`;
-        console.error('Error:', error);
-    });
-});
-
     </script>
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
 </body>
-</html>
+</html> 

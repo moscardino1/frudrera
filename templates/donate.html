@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate USDT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <h1 class="text-3xl font-bold mb-4 text-center">Support Us with USDT 💵</h1>
+        <p class="mb-4 text-center">If you appreciate our work and would like to support us, you can donate Tether (USDT) to the address below:</p>
+        
+        <div class="bg-white shadow-md rounded-lg p-6 mb-4">
+            <h2 class="text-lg font-semibold text-center">USDT Address:</h2>
+            <p class="text-gray-600 break-all text-center">{{ usdt_address }}</p>
+        </div>
+
+        <h2 class="text-lg font-semibold mb-2 text-center">Scan to Donate:</h2>
+        <img src="data:image/png;base64,{{ qr_image }}" alt="QR Code" class="mb-4 mx-auto" />
+
+        <div class="bg-white shadow-md rounded-lg p-6 mb-4">
+            <h3 class="text-lg font-semibold mb-2 text-center">How to Donate USDT:</h3>
+            <ol class="list-decimal list-inside text-gray-600">
+                <li>Open your cryptocurrency wallet app.</li>
+                <li>Select the option to send or transfer USDT.</li>
+                <li>Scan the QR code above or copy the USDT address provided.</li>
+                <li>Enter the amount of USDT you wish to donate.</li>
+                <li>Confirm the transaction.</li>
+            </ol>
+        </div>
+
+        <p class="text-gray-600 text-center">Thank you for your support!</p>
+    </div>
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html> 

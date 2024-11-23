@@ -1,132 +1,202 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>FRUDRERA</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRUDRERA - Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='images/home.jpeg') }}" type="image/x-icon">
-    <style>
-        /* .object-details {
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
-        } */
-        /* .object-details img {
-            max-width: 200px;
-            height: auto;
-        } */
-        /* .object-info {
-            margin-left: 20px;
-        } */
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <h1>FRUDRERA - See Food, Make Food</h1>
+    <div class="noise"></div>
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">FRUDRERA</div>
+            <div class="tagline">See Food, Make Food</div>
+        </nav>
     </header>
 
-    <div class="container">
-        <div class="section">
-            <h2>Original Image</h2>
-            <img id="originalImage" alt="Original Image">
+    <main class="main-container results-page">
+        <div class="results-grid">
+            <!-- Original Image Section -->
+            <section class="results-section original-image">
+                <h2 class="section-title"><i class="fas fa-image"></i> Your Fridge</h2>
+                <div class="image-container">
+                    <img id="originalImage" alt="Original Image" class="full-width-image">
+                </div>
+            </section>
+
+            <!-- Detected Ingredients Section -->
+            <section class="results-section ingredients">
+                <h2 class="section-title"><i class="fas fa-carrot"></i> Detected Ingredients</h2>
+                <div id="detectedObjects" class="ingredients-grid"></div>
+            </section>
+
+            <!-- Recommended Recipes Section -->
+            <section class="results-section recipes">
+                <h2 class="section-title"><i class="fas fa-utensils"></i> Recommended Recipes</h2>
+                <div id="recommendedRecipes" class="recipes-grid"></div>
+            </section>
         </div>
-        <div class="section">
-            <h2>Detected Ingredients</h2>
-            <div id="detectedObjects"></div>
+
+        <a href="/" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Try Another Photo
+        </a>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <nav class="footer-links">
+                <a href="/contact" class="footer-link">Contact</a>
+                <a href="/info" class="footer-link">How It Works</a>
+                <a href="/donate" class="footer-link">Support Us</a>
+            </nav>
+            <p class="footer-copy">© 2024 FRUDRERA. All rights reserved.</p>
         </div>
-        <div class="section">
-            <h2>Recommended Recipes</h2>
-            <div id="recommendedRecipes"></div>
-        </div>
-    </div>
+    </footer>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const results = JSON.parse(localStorage.getItem('detectionResults'));
-            if (results) {
-                // Display original image
-                document.getElementById('originalImage').src = `data:image/png;base64,${results.original_image}`;
+            if (!results) {
+                window.location.href = '/';
+                return;
+            }
 
-                // Display detected objects
-                const detectedObjectsDiv = document.getElementById('detectedObjects');
-                for (const [category, objects] of Object.entries(results.categorized_objects)) {
-                    const categoryDiv = document.createElement('div');
-                    categoryDiv.className = 'category';
+            // Display original image
+            document.getElementById('originalImage').src = `data:image/png;base64,${results.original_image}`;
 
-                    const categoryHeader = document.createElement('h3');
-                    categoryHeader.textContent = category;
-                    categoryDiv.appendChild(categoryHeader);
+            // Display detected objects
+            const detectedObjectsDiv = document.getElementById('detectedObjects');
+            for (const [category, objects] of Object.entries(results.categorized_objects)) {
+                const categorySection = document.createElement('div');
+                categorySection.className = 'ingredient-category';
 
-                    objects.forEach(obj => {
-                        const objectDiv = document.createElement('div');
-                        objectDiv.className = 'object-details';
-                        objectDiv.innerHTML = `
+                const categoryHeader = document.createElement('h3');
+                categoryHeader.className = 'category-title';
+                categoryHeader.textContent = category;
+                categorySection.appendChild(categoryHeader);
+
+                const objectsGrid = document.createElement('div');
+                objectsGrid.className = 'objects-grid';
+
+                objects.forEach(obj => {
+                    const objectCard = document.createElement('div');
+                    objectCard.className = 'ingredient-card';
+                    objectCard.innerHTML = `
+                        <div class="ingredient-image">
                             <img src="data:image/png;base64,${obj.cropped_image}" alt="${obj.label}">
-                            <div class="object-info">
-                                <p><strong>Label:</strong> ${obj.label}</p>
-                                <p><strong>Confidence:</strong> ${obj.confidence.toFixed(2)}</p>
-                                <p><strong>Detected Text:</strong> ${obj.detected_text || 'None'}</p>
-                                <p><strong>OCR Text:</strong> ${obj.ocr_text || 'None'}</p>
+                        </div>
+                        <div class="ingredient-info">
+                            <h4>${obj.label}</h4>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: ${obj.confidence * 100}%"></div>
                             </div>
-                        `;
-                        categoryDiv.appendChild(objectDiv);
-                    });
+                            <p class="confidence-text">${(obj.confidence * 100).toFixed(0)}% confidence</p>
+                            ${obj.detected_text ? `<p class="detected-text">Text: ${obj.detected_text}</p>` : ''}
+                        </div>
+                    `;
+                    objectsGrid.appendChild(objectCard);
+                });
 
-                    detectedObjectsDiv.appendChild(categoryDiv);
-                }
+                categorySection.appendChild(objectsGrid);
+                detectedObjectsDiv.appendChild(categorySection);
+            }
 
-                // Display recommended recipes (keep this part as it was)
- // Display recommended recipes
- const recommendedRecipesDiv = document.getElementById('recommendedRecipes');
-                if (results.recommended_recipes.length > 0) {
-                    results.recommended_recipes.forEach((recipe, index) => {
-                        const recipeDiv = document.createElement('div');
-                        recipeDiv.className = 'recipe card';
-                        recipeDiv.innerHTML = `
+            // Display recommended recipes
+            const recommendedRecipesDiv = document.getElementById('recommendedRecipes');
+            if (results.recommended_recipes.length > 0) {
+                results.recommended_recipes.forEach((recipe, index) => {
+                    const recipeCard = document.createElement('div');
+                    recipeCard.className = 'recipe-card';
+                    recipeCard.innerHTML = `
+                        <div class="recipe-image">
                             <img src="${recipe.image}" alt="${recipe.recipe}">
+                        </div>
+                        <div class="recipe-content">
                             <h3>${recipe.recipe}</h3>
-                            <button class="collapsible">Show Details</button>
-                            <div class="content">
-                                <p><strong>Description:</strong> ${recipe.description}</p>
-                                <p><strong>Ingredients:</strong></p>
-                                <ul>
-                                    ${recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
-                                </ul>
-                                <p><strong>Missing Ingredients:</strong></p>
-                                <ul>
-                                    ${recipe.missing_ingredients.length > 0 
-                                        ? recipe.missing_ingredients.map(missing => `<li class="missing">${missing}</li>`).join('') 
-                                        : '<li>None</li>'}
-                                </ul>
-                                <p><strong>Steps:</strong></p>
-                                <ol>
-                                    ${recipe.steps.map(step => `<li>${step}</li>`).join('')}
-                                </ol>
-                                <p><strong>Cooking Time:</strong> ${recipe.cooking_time}</p>
-                                <p><strong>Servings:</strong> ${recipe.servings}</p>
-                                <p><strong>Category:</strong> ${recipe.category}</p>
+                            <div class="recipe-meta">
+                                <span><i class="fas fa-clock"></i> ${recipe.cooking_time}</span>
+                                <span><i class="fas fa-user"></i> ${recipe.servings} servings</span>
                             </div>
-                        `;
-                        recommendedRecipesDiv.appendChild(recipeDiv);
+                            <button class="recipe-details-btn">
+                                <span>View Recipe</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="recipe-details">
+                            <div class="details-content">
+                                <div class="details-section">
+                                    <h4><i class="fas fa-info-circle"></i> Description</h4>
+                                    <p>${recipe.description}</p>
+                                </div>
+                                
+                                <div class="details-section">
+                                    <h4><i class="fas fa-list"></i> Ingredients</h4>
+                                    <ul class="ingredients-list">
+                                        ${recipe.ingredients.map(ingredient => `
+                                            <li><i class="fas fa-check"></i> ${ingredient}</li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
 
-                        // Collapsible content functionality
-                        const coll = recipeDiv.querySelector(".collapsible");
-                        const content = recipeDiv.querySelector(".content");
-                        coll.addEventListener("click", function() {
-                            this.classList.toggle("active");
-                            if (content.style.display === "block") {
-                                content.style.display = "none";
-                            } else {
-                                content.style.display = "block";
+                                ${recipe.missing_ingredients.length > 0 ? `
+                                    <div class="details-section missing-ingredients">
+                                        <h4><i class="fas fa-exclamation-circle"></i> Missing Ingredients</h4>
+                                        <ul class="missing-list">
+                                            ${recipe.missing_ingredients.map(missing => `
+                                                <li><i class="fas fa-times"></i> ${missing}</li>
+                                            `).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
+
+                                <div class="details-section">
+                                    <h4><i class="fas fa-tasks"></i> Instructions</h4>
+                                    <ol class="instructions-list">
+                                        ${recipe.steps.map(step => `<li>${step}</li>`).join('')}
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    recommendedRecipesDiv.appendChild(recipeCard);
+
+                    // Add click event for recipe details
+                    const detailsBtn = recipeCard.querySelector('.recipe-details-btn');
+                    const details = recipeCard.querySelector('.recipe-details');
+                    
+                    detailsBtn.addEventListener('click', function() {
+                        const isExpanded = details.classList.contains('expanded');
+                        
+                        // Close all other expanded recipes
+                        document.querySelectorAll('.recipe-details.expanded').forEach(el => {
+                            if (el !== details) {
+                                el.classList.remove('expanded');
+                                el.closest('.recipe-card').querySelector('.recipe-details-btn').classList.remove('active');
                             }
                         });
+
+                        // Toggle current recipe
+                        details.classList.toggle('expanded');
+                        this.classList.toggle('active');
                     });
-                } else {
-                    recommendedRecipesDiv.innerHTML = '<p>No recipes found for the detected ingredients.</p>';
-                }
+                });
             } else {
-                document.body.innerHTML = '<p>No results found. Please go back and upload an image.</p>';
+                recommendedRecipesDiv.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <p>No recipes found for the detected ingredients.</p>
+                    </div>
+                `;
             }
         });
     </script>
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
 </body>
-</html>
+</html> 
