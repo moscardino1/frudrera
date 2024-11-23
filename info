@@ -10,11 +10,6 @@ to prod:
     vercel --prod 
 
 
-add some charts
-add some results interacting with input
-layout it's easier to navigate and understand
-costs rent exp should be monthly and autopopulated
- info
 
 python app.py
 pip freeze > requirements.txt

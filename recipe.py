@@ -56,6 +56,7 @@ def recommend_recipe(available_ingredients):
                 'cooking_time': recipe_info['cooking_time'],
                 'servings': recipe_info['servings'],
                 'category': recipe_info['category'],
+                'image': recipe_info.get('image'),  # Include image if available
                 'match_score': match_score
             })
     

@@ -15,7 +15,7 @@ recipes = {
         'cooking_time': '30 minutes',
         'servings': '4',
         'category': 'Soup',
-        'image': 'url_to_image_of_tomato_soup'
+        'image': 'https://www.inspiredtaste.net/wp-content/uploads/2022/11/Tomato-Soup-Recipe-Video.jpg'
     },
     'lettuce': {
         'recipe': 'Lettuce Salad',
@@ -30,7 +30,7 @@ recipes = {
         'cooking_time': '10 minutes',
         'servings': '2',
         'category': 'Salad',
-        'image': 'url_to_image_of_lettuce_salad'
+        'image': 'https://www.themediterraneandish.com/wp-content/uploads/2022/05/lemon-parmesan-lettuce-salad-recipe-6.jpg'
     },
     'cheese': {
         'recipe': 'Cheese Sandwich',
@@ -44,7 +44,7 @@ recipes = {
         'cooking_time': '10 minutes',
         'servings': '1',
         'category': 'Snack',
-        'image': 'url_to_image_of_cheese_sandwich'
+        'image': 'https://natashaskitchen.com/wp-content/uploads/2021/08/Grilled-Cheese-Sandwich-SQ.jpg'
     },
     'chicken': {
         'recipe': 'Grilled Chicken',
@@ -58,7 +58,7 @@ recipes = {
         'cooking_time': '40 minutes (including marination)',
         'servings': '2',
         'category': 'Main Course',
-        'image': 'url_to_image_of_grilled_chicken'
+        'image': 'https://www.allrecipes.com/thmb/Bw4L_IuQHhHeqq52cEkWbA5PIGo=/0x512/filters:no_upscale():max_bytes(150000):strip_icc()/16160-juicy-grilled-chicken-breasts-ddmfs-5594-hero-3x4-902673c819994c0191442304b40104af.jpg'
     },
     'pasta': {
         'recipe': 'Pasta Aglio e Olio',
@@ -73,7 +73,7 @@ recipes = {
         'cooking_time': '20 minutes',
         'servings': '2',
         'category': 'Pasta',
-        'image': 'url_to_image_of_pasta_aglio_e_olio'
+        'image': 'https://walkingthroughlavenderfields.com/wp-content/uploads/2022/09/aglio-e-olio-e-peperoncino-01-500x500.jpeg?crop=1'
     },
     'tiramisu': {
         'recipe': 'Tiramisu',
@@ -89,7 +89,7 @@ recipes = {
         'cooking_time': '30 minutes (plus chilling time)',
         'servings': '6',
         'category': 'Dessert',
-        'image': 'url_to_image_of_tiramisu'
+        'image': 'https://www.emborg.com/app/uploads/2023/06/1200x900px_Traditional-Tiramisu-with-Coffee-and-Sweet-Wine.png'
     },
     'pasta_ragu': {
         'recipe': 'Pasta al Ragu',
@@ -110,6 +110,6 @@ recipes = {
         'cooking_time': '1 hour',
         'servings': '4',
         'category': 'Main Course',
-        'image': 'url_to_image_of_pasta_ragu'
+        'image': 'https://carolinagelen.com/wp-content/uploads/2024/03/IMG_7691_VSCO-scaled.jpg'
     },
 }

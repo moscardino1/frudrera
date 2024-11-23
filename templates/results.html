@@ -108,7 +108,7 @@
             // Display recommended recipes
             const recommendedRecipesDiv = document.getElementById('recommendedRecipes');
             if (results.recommended_recipes.length > 0) {
-                results.recommended_recipes.forEach((recipe, index) => {
+                results.recommended_recipes.forEach((recipe) => {
                     const recipeCard = document.createElement('div');
                     recipeCard.className = 'recipe-card';
                     recipeCard.innerHTML = `
@@ -199,4 +199,4 @@
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
 </body>
-</html> 
+</html>
